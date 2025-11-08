@@ -1,0 +1,22 @@
+version: "3.9"
+
+services:
+  bedrock:
+    build: .
+    container_name: mcbe-server
+    restart: unless-stopped
+    ports:
+     - "19134:19132/udp"
+     - "19135:19133/udp"
+    volumes:
+      - ./data/worlds:/home/minecraft/worlds
+      - type: bind
+        source: ./data/server.properties
+        target: /home/minecraft/server.properties
+    environment:
+      SERVER_NAME: "Bedrock on the Dock"
+      MAX_PLAYERS: "10"
+      GAMEMODE: "survival"
+      DIFFICULTY: "easy"
+      ONLINE_MODE: "true"
+      ALLOW_CHEATS: "false"
