@@ -6,7 +6,7 @@ LABEL maintainer="brandon@admincraftsman.com"
 
 # Update packages and install dependencies
 RUN pacman -Syu --noconfirm && \
-    pacman -S --noconfirm unzip wget screen
+    pacman -S --noconfirm unzip curl jq screen
 
 # Optional: clean up cached packages to keep image small
 RUN pacman -Scc --noconfirm
@@ -16,17 +16,16 @@ RUN useradd -m -d /home/minecraft -s /bin/bash minecraft
 
 # Copy entrypoint as root
 COPY entrypoint.sh /home/minecraft/entrypoint.sh
-RUN chmod +x /home/minecraft/entrypoint.sh \
-    && chown minecraft:minecraft /home/minecraft/entrypoint.sh
+COPY fetch-server.sh /home/minecraft/fetch-server.sh
+RUN chmod +x /home/minecraft/entrypoint.sh /home/minecraft/fetch-server.sh \
+    && chown minecraft:minecraft /home/minecraft/entrypoint.sh /home/minecraft/fetch-server.sh
 
 # Then switch to non-root user
 USER minecraft
 WORKDIR /home/minecraft
 
 # Download the latest Bedrock server (change URL if needed)
-RUN wget -O bedrock-server.zip https://minecraft.net/bedrockdedicatedserver/bin-linux/bedrock-server-1.21.121.1.zip && \
-   unzip bedrock-server.zip && \
-   rm bedrock-server.zip
+RUN /home/minecraft/fetch-server.sh
 
 # Accept EULA automatically
 RUN echo "eula=true" > eula.txt
