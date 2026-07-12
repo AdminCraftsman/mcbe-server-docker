@@ -1,10 +1,10 @@
-# mcbe-server-docker
+# AdCraft's Minecraft Bedrock Server Docker Image
 
 **TL;DR:** A self-updating Docker image for a Minecraft Bedrock dedicated server — drop a `.mcworld` file in a `mods` folder and it's live on boot. [Jump to setup →](#quick-start)
 
 ## Why this exists
 
-One of my kids is getting into Minecraft and, like every kid with a favorite streamer, wants whatever custom world or mod they just saw played — for about thirty minutes, until the next video changes their mind. They play on console, not PC, so anything beyond vanilla needs a server hosting it for them.
+One of my kids loves Minecraft and, like every kid with a favorite streamer, wants whatever custom world or mod they just saw played — for about thirty minutes, until the next video changes their mind. They play on console, not PC, so anything beyond vanilla needs a server hosting it for them.
 
 Manually re-provisioning a server every time the flavor of the week changes wasn't sustainable, especially over summer break. So instead: a vanilla, always-current Bedrock server image where "installing a mod" means dropping a file in a folder and restarting the container.
 
@@ -24,11 +24,13 @@ Manually re-provisioning a server every time the flavor of the week changes wasn
 
 ### 1. Get the image
 
-Pull the published image from [Docker Hub](https://hub.docker.com/r/fingerhutascode/minecraft-bedrock-server), or build it yourself:
+Pull the published image from [Docker Hub](https://hub.docker.com/r/fingerhutascode/minecraft-bedrock-server):
 
 ```bash
 docker pull fingerhutascode/minecraft-bedrock-server
 ```
+
+Or build it yourself from source on [GitHub](https://github.com/AdminCraftsman/mcbe-server-docker):
 
 ```bash
 ./build.sh
