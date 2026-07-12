@@ -60,3 +60,18 @@ jobs:
           tags: |
             ${{ env.IMAGE_NAME }}:${{ needs.check-version.outputs.version }}
             ${{ env.IMAGE_NAME }}:latest
+
+  update-description:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Push README to Docker Hub
+        uses: peter-evans/dockerhub-description@v4
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          repository: ${{ env.IMAGE_NAME }}
+          short-description: "Auto-updating Minecraft Bedrock server with drop-in .mcworld mod support"
+          readme-filepath: ./README.md
