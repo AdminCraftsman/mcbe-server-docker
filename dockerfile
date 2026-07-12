@@ -6,7 +6,7 @@ LABEL maintainer="brandon@admincraftsman.com"
 
 # Update packages and install dependencies
 RUN pacman -Syu --noconfirm && \
-    pacman -S --noconfirm unzip curl jq screen
+    pacman -S --noconfirm unzip curl jq screen python3
 
 # Optional: clean up cached packages to keep image small
 RUN pacman -Scc --noconfirm
@@ -16,16 +16,29 @@ RUN useradd -m -d /home/minecraft -s /bin/bash minecraft
 
 # Copy entrypoint as root
 COPY entrypoint.sh /home/minecraft/entrypoint.sh
-COPY fetch-server.sh /home/minecraft/fetch-server.sh
-RUN chmod +x /home/minecraft/entrypoint.sh /home/minecraft/fetch-server.sh \
-    && chown minecraft:minecraft /home/minecraft/entrypoint.sh /home/minecraft/fetch-server.sh
 
-# Then switch to non-root user
+# Copy and execute fetch-server script as root to install latest Bedrock server
+COPY fetch-server.sh /home/minecraft/fetch-server.sh
+COPY fetch-world.py /home/minecraft/fetch-world.py
+COPY fetch-packs.py /home/minecraft/fetch-packs.py
+RUN chmod +x \
+    /home/minecraft/entrypoint.sh \
+    /home/minecraft/fetch-server.sh \
+    && chown minecraft:minecraft \
+    /home/minecraft/entrypoint.sh \
+    /home/minecraft/fetch-server.sh \
+    /home/minecraft/fetch-world.py \
+    /home/minecraft/fetch-packs.py
+
+# Switch to non-root user
 USER minecraft
 WORKDIR /home/minecraft
 
 # Download the latest Bedrock server (change URL if needed)
 RUN /home/minecraft/fetch-server.sh
+
+# Copy server.properties to the working directory
+COPY --chown=minecraft:minecraft server.properties /home/minecraft/server.properties
 
 # Accept EULA automatically
 RUN echo "eula=true" > eula.txt
